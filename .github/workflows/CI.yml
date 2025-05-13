@@ -12,13 +12,6 @@ env:
 
 jobs:
 
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@v4
-
   build-push-store-docker-image:
     runs-on: ubuntu-latest
     permissions:
@@ -58,19 +51,3 @@ jobs:
         run: |
             docker build --tag ghcr.io/karimdevwm/${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}} .
             docker push ghcr.io/karimdevwm/${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
-
-  deploy:
-    needs: build-push-store-docker-image
-    name: Deploy Docker Image
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Deploy using Ansible
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/task_service/deploy/
-            ansible-playbook -i inventory deploy_microservices.yml
