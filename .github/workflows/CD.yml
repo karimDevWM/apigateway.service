@@ -17,12 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Deploy using Ansible
+      - name: Deploy to vps using Ansible
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/task_service/deploy/
+            cd ~/ecommerce_msvcs/deploy/
             ansible-playbook -i inventory deploy_microservices.yml
